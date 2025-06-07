@@ -529,3 +529,23 @@
 {"level":"info","message":"GET /api/subscriptions/user"}
 {"level":"info","message":"GET /api/profiles/undefined"}
 {"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}

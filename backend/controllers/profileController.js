@@ -87,11 +87,11 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
-// Get current user's profile (full data)
-const getMyProfile = async (req, res) => {
+// Get user profile
+const getProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log('Fetching full profile for current user ID:', userId);
+    console.log('Fetching profile for user ID:', userId);
     
     const profile = await Profile.findByUserId(userId);
     
@@ -135,67 +135,6 @@ const getMyProfile = async (req, res) => {
   }
 };
 
-// Get specific user's profile (public data only)
-const getUserProfile = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    
-    // Validate userId is provided and is a valid number
-    if (!userId || isNaN(parseInt(userId, 10))) {
-      console.log('Invalid or missing user ID:', userId);
-      return res.status(400).json({ 
-        success: false, 
-        error: 'A valid user ID is required' 
-      });
-    }
-
-    console.log('Fetching public profile for user ID:', userId);
-    
-    // Only fetch public profile data
-    const publicProfile = await Profile.findPublicProfileById(parseInt(userId, 10));
-    
-    if (!publicProfile) {
-      console.log('Profile not found for user ID:', userId);
-      return res.status(404).json({ 
-        success: false, 
-        error: 'Profile not found' 
-      });
-    }
-    
-    console.log('Successfully fetched profile for user ID:', userId);
-    res.status(200).json({ 
-      success: true, 
-      profile: publicProfile 
-    });
-    
-  } catch (error) {
-    console.error('Error in getUserProfile:', {
-      error: error.message,
-      stack: error.stack,
-      userId: req.params.userId,
-      params: req.params
-    });
-    
-    // Handle specific database errors
-    if (error.code === '22P02') { // Invalid text representation
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid user ID format',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
-      });
-    }
-    
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to fetch profile',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-};
-
-// Alias for backward compatibility
-const getProfile = getMyProfile;
-
 // Update user profile
 const updateProfile = async (req, res) => {
   try {
@@ -231,8 +170,6 @@ const ensureUploadsDirectory = () => {
 module.exports = {
   getProfileVisitors,
   uploadProfilePicture,
-  getProfile,           // Alias for backward compatibility
-  getMyProfile,         // New explicit name
-  getUserProfile,       // New function
+  getProfile,
   updateProfile
 };

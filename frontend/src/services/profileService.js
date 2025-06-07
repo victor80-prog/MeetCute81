@@ -2,31 +2,11 @@ import { get, post, put, upload } from '../utils/apiClient';
 
 /**
  * Get user profile by ID
- * @param {string|number} [userId] - Optional user ID (gets current user if not provided)
+ * @param {string} userId - User ID
  * @returns {Promise<Object>} Profile data
  */
 export const getProfile = async (userId) => {
-  try {
-    // If no userId is provided, get current user's profile
-    if (!userId) {
-      return await get('/profiles');
-    }
-    
-    // Ensure userId is a valid number
-    const parsedUserId = typeof userId === 'string' ? parseInt(userId, 10) : userId;
-    if (isNaN(parsedUserId)) {
-      throw new Error(`Invalid user ID: ${userId}`);
-    }
-    
-    return await get(`/profiles/${parsedUserId}`);
-  } catch (error) {
-    console.error('Error in getProfile:', {
-      error,
-      userId,
-      timestamp: new Date().toISOString()
-    });
-    throw error; // Re-throw to let the caller handle it
-  }
+  return get(`/profiles/${userId}`);
 };
 
 /**
@@ -34,15 +14,7 @@ export const getProfile = async (userId) => {
  * @returns {Promise<Object>} Current user's profile
  */
 export const getMyProfile = async () => {
-  try {
-    return await get('/profiles');
-  } catch (error) {
-    console.error('Error in getMyProfile:', {
-      error,
-      timestamp: new Date().toISOString()
-    });
-    throw error; // Re-throw to let the caller handle it
-  }
+  return get('/profiles/me');
 };
 
 /**

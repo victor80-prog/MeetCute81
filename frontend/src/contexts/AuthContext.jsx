@@ -82,38 +82,19 @@ export const AuthProvider = ({ children }) => {
     }));
   };
 
-  // Function to refresh user data from the server
-  const refreshUser = async () => {
-    try {
-      const response = await api.get('/api/auth/me', { _skipAuthRedirect: true });
-      if (response.data) {
-        setCurrentUser(prev => ({
-          ...prev,
-          ...response.data,
-          // Preserve the token if it exists
-          token: prev?.token || response.data.token
-        }));
-        return response.data;
-      }
-    } catch (error) {
-      console.error('Error refreshing user data:', error);
-      throw error;
-    }
-  };
-
   return (
-    <AuthContext.Provider value={{
-      currentUser,
-      isAuthenticated: !!currentUser,
-      isLoading,
-      error,
-      login,
-      logout,
-      updateUser,
-      refreshUser,
-      setCurrentUser
-    }}>
-      {!isLoading && children}
+    <AuthContext.Provider
+      value={{
+        currentUser,
+        isAuthenticated: !!currentUser,
+        isLoading,
+        error,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
+      {children}
     </AuthContext.Provider>
   );
 };

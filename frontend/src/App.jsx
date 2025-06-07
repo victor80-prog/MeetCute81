@@ -40,55 +40,34 @@ const router = createBrowserRouter([
 
   // Routes with the main Layout (which now contains SubscriptionProvider)
   {
-    element: <Layout />,
+    element: <PrivateRoute><Layout /></PrivateRoute>,
     children: [
-      // Routes that require authentication and a complete profile
-      {
-        element: <PrivateRoute requireCompleteProfile={true}><div /></PrivateRoute>,
-        children: [
-          { path: "/dashboard", element: <Dashboard /> },
-          { path: "/discover", element: <Discover /> },
-          { path: "/messages", element: <Messages /> },
-          { path: "/messages/:conversationId", element: <Messages /> },
-          { path: "/matches", element: <Matches /> },
-          { path: "/gifts", element: <Gifts /> },
-          { path: "/premium", element: <Premium /> },
-          { path: "/profile", element: <Profile /> },
-          { path: "/settings", element: <Settings /> },
-          { path: "/withdrawals", element: <WithdrawalPage /> },
-          { path: "/deposits", element: <DepositPage /> },
-        ]
-      },
-      
-      // Routes that require authentication but not a complete profile
-      {
-        element: <PrivateRoute requireCompleteProfile={false}><div /></PrivateRoute>,
-        children: [
-          { path: "/profile-setup", element: <ProfileSetup /> },
-          { path: "/pricing", element: <Pricing /> },
-          { path: "/subscription/confirmation", element: <SubscriptionConfirmation /> },
-          { path: "/subscribe/:packageId", element: <ConfirmSubscriptionPage /> },
-        ]
-      },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/discover", element: <Discover /> },
+      { path: "/messages", element: <Messages /> },
+      { path: "/messages/:conversationId", element: <Messages /> },
+      { path: "/matches", element: <Matches /> },
+      { path: "/gifts", element: <Gifts /> },
+      { path: "/premium", element: <Premium /> },
+      { path: "/pricing", element: <Pricing /> },
+      { path: "/profile", element: <Profile /> },
+      { path: "/settings", element: <Settings /> },
+      { path: "/withdrawals", element: <WithdrawalPage /> },
+      { path: "/deposits", element: <DepositPage /> },
+      { path: "/profile-setup", element: <ProfileSetup /> },
+      { path: "/subscription/confirmation", element: <SubscriptionConfirmation /> },
+      { path: "/subscribe/:packageId", element: <ConfirmSubscriptionPage /> },
     ]
   },
   
-  // Admin Routes (protected by both auth and admin check)
+  // Admin Routes
   {
     path: "/admin",
-    element: (
-      <PrivateRoute requireCompleteProfile={false} adminOnly={true}>
-        <AdminDashboard />
-      </PrivateRoute>
-    )
+    element: <PrivateRoute adminOnly={true}><AdminDashboard /></PrivateRoute>
   },
   {
     path: "/admin/withdrawals",
-    element: (
-      <PrivateRoute requireCompleteProfile={false} adminOnly={true}>
-        <AdminWithdrawalsPage />
-      </PrivateRoute>
-    )
+    element: <PrivateRoute adminOnly={true}><AdminWithdrawalsPage /></PrivateRoute>
   },
 
   // Fallback Route
@@ -113,6 +92,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        theme="colored"
       />
       <RouterProvider router={router} />
     </AuthProvider>

@@ -54,148 +54,37 @@ router.use((req, res, next) => {
   next();
 });
 
-// Profile picture upload with enhanced validation and error handling
+// Profile picture upload
 router.post(
   '/picture',
   isAuthenticated,
   (req, res, next) => {
-    console.log('Starting file upload for user:', req.user.id);
-    
-    // Check if file is present
-    if (!req.files || !req.files.profilePicture) {
-      console.log('No file uploaded in request');
-      return res.status(400).json({
-        success: false,
-        error: 'No file uploaded. Please select a file.'
-      });
-    }
-    
     upload.single('profilePicture')(req, res, function(err) {
-      if (err) {
-        console.error('File upload error:', {
-          error: err.message,
-          stack: err.stack,
-          userId: req.user.id,
-          file: req.file
-        });
-        
-        if (err.code === 'LIMIT_FILE_SIZE') {
-          return res.status(400).json({
-            success: false,
-            error: 'File size too large. Maximum size is 5MB.'
-          });
-        }
-        
-        if (err.message.includes('image files')) {
-          return res.status(400).json({
-            success: false,
-            error: 'Invalid file type. Only JPG, JPEG, PNG, and GIF images are allowed.'
-          });
-        }
-        
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred during file upload
         return res.status(400).json({
           success: false,
-          error: 'Failed to upload file. ' + (err.message || 'Please try again.')
+          error: err.message || 'Error uploading file'
         });
-      }
-      
-      if (!req.file) {
-        console.log('No file data after upload middleware');
-        return res.status(400).json({
+      } else if (err) {
+        // An unknown error occurred
+        console.error('File upload error:', err);
+        return res.status(500).json({
           success: false,
-          error: 'No file data received. Please try again.'
+          error: 'Failed to process file upload'
         });
       }
-      
-      console.log('File upload successful:', {
-        originalname: req.file.originalname,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-        filename: req.file.filename,
-        userId: req.user.id
-      });
-      
       next();
     });
   },
-  // Handle the actual file processing in the controller
   profileController.uploadProfilePicture
 );
 
-// Get current user's full profile
+// Get user profile
 router.get(
   '/',
   isAuthenticated,
-  (req, res, next) => {
-    console.log('Fetching current user profile for user ID:', req.user.id);
-    profileController.getMyProfile(req, res, next);
-  }
-);
-
-// Get user profile by ID (public data) or current user if no ID provided
-router.get(
-  '/:userId?',
-  isAuthenticated,
-  (req, res, next) => {
-    const { userId } = req.params;
-    
-    // Log the incoming request details
-    console.log('Profile request received:', {
-      path: req.path,
-      method: req.method,
-      params: req.params,
-      query: req.query,
-      userId: req.user.id,
-      requestedUserId: userId || 'current user'
-    });
-    
-    try {
-      // If no userId is provided, get current user's profile
-      if (!userId) {
-        console.log('No userId provided, fetching current user profile');
-        return profileController.getMyProfile(req, res, next);
-      }
-      
-      // Validate userId format
-      if (isNaN(parseInt(userId, 10))) {
-        console.log('Invalid userId format:', userId);
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid user ID format. Must be a number.'
-        });
-      }
-      
-      // If requesting own profile, use getMyProfile for full data
-      if (parseInt(userId, 10) === req.user.id) {
-        console.log('User requested their own profile by ID, using getMyProfile');
-        return profileController.getMyProfile(req, res, next);
-      }
-      
-      // Otherwise, get the specified user's public profile
-      console.log('Fetching public profile for user ID:', userId);
-      return profileController.getUserProfile(req, res, next);
-      
-    } catch (error) {
-      console.error('Error in profile route handler:', {
-        error: error.message,
-        stack: error.stack,
-        userId: req.user.id,
-        requestedUserId: userId
-      });
-      
-      // Handle specific error cases
-      if (error.name === 'SequelizeDatabaseError') {
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid user ID format',
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-      }
-      
-      // Pass to error handler middleware
-      next(error);
-    }
-  }
+  profileController.getProfile
 );
 
 // Update user profile

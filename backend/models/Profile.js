@@ -99,37 +99,6 @@ class Profile {
   /**
    * Your getPotentialMatches function. No changes needed here.
    */
-  /**
-   * Find public profile data by user ID
-   * @param {number} userId - The user ID to find
-   * @returns {Promise<object|null>} Public profile data or null if not found
-   */
-  static async findPublicProfileById(userId) {
-    const query = `
-      SELECT 
-        p.user_id,
-        p.first_name,
-        p.last_name,
-        p.bio,
-        p.profile_picture,
-        p.gender,
-        p.dob,
-        u.created_at as member_since,
-        u.subscription_tier
-      FROM profiles p
-      JOIN users u ON p.user_id = u.id
-      WHERE p.user_id = $1 AND u.is_active = true;
-    `;
-    
-    try {
-      const result = await pool.query(query, [userId]);
-      return result.rows[0] || null;
-    } catch (error) {
-      console.error(`Error finding public profile for user ${userId}:`, error);
-      throw error;
-    }
-  }
-
   static async getPotentialMatches(userId, limit = 20) {
     const query = `
        SELECT

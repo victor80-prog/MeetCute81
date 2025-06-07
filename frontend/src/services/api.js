@@ -78,158 +78,36 @@ export const authAPI = {
 
 // Profile API
 export const profileAPI = {
-  /**
-   * Get current user's full profile
-   * @returns {Promise<Object>} User's profile data
-   */
-  getMyProfile: async () => {
-    try {
-      // First, get the current user's ID from the /me endpoint
-      const userResponse = await api.get('/auth/me', { _skipAuthRedirect: true });
-      const userId = userResponse.data?.id;
-      
-      if (!userId) {
-        throw new Error('User ID not found in response');
-      }
-      
-      // Then fetch the profile using the user ID
-      const response = await api.get(`/profiles/${userId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Could not fetch user profile:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-      // Don't throw the error, just return null to indicate no profile exists
-      return { error: 'Profile not found' };
-    }
-  },
-
-  /**
-   * Get user profile by ID (public data only)
-   * @param {string|number} userId - User ID to fetch
-   * @returns {Promise<Object>} Public profile data
-   */
+  // Get user profile
   getProfile: async (userId) => {
-    if (!userId) {
-      throw new Error('User ID is required');
-    }
-    
-    try {
-      const response = await api.get(`/profiles/${userId}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching profile for user ${userId}:`, {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-      throw error;
-    }
+    const response = await api.get(`/profiles/${userId}`);
+    return response.data;
   },
   
-  /**
-   * Create or update profile
-   * @param {Object} profileData - Profile data to update
-   * @returns {Promise<Object>} Updated profile data
-   */
+  // Create or update profile
   updateProfile: async (profileData) => {
-    try {
-      // First, get the current user's ID
-      const userResponse = await api.get('/auth/me', { _skipAuthRedirect: true });
-      const userId = userResponse.data?.id;
-      
-      if (!userId) {
-        throw new Error('User ID not found');
-      }
-      
-      // Format the data to match the backend expectations
-      const formattedData = {
-        first_name: profileData.firstName,
-        last_name: profileData.lastName,
-        dob: profileData.dob,
-        gender: profileData.gender,
-        bio: profileData.bio
-      };
-      
-      // Use PATCH for partial updates
-      const response = await api.patch(`/profiles/${userId}`, formattedData);
-      return response.data;
-    } catch (error) {
-      console.error('Error updating profile:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-      throw error;
-    }
+    const response = await api.put('/profiles', profileData);
+    return response.data;
   },
   
-  /**
-   * Upload profile picture
-   * @param {File} file - Image file to upload
-   * @returns {Promise<Object>} Response with image URL
-   */
+  // Upload profile picture
   uploadProfilePicture: async (file) => {
-    if (!file) {
-      throw new Error('No file provided');
-    }
-    
-    // First, get the current user's ID
-    const userResponse = await api.get('/auth/me', { _skipAuthRedirect: true });
-    const userId = userResponse.data?.id;
-    
-    if (!userId) {
-      throw new Error('User ID not found');
-    }
-    
     const formData = new FormData();
     formData.append('profilePicture', file);
     
-    try {
-      const response = await api.post(`/profiles/${userId}/picture`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error uploading profile picture:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message,
-        fileInfo: { name: file.name, type: file.type, size: file.size }
-      });
-      throw error;
-    }
+    const response = await api.post('/profiles/picture', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
   },
   
-  /**
-   * Mark profile as complete
-   * @returns {Promise<Object>} Response data
-   */
+  // Mark profile as complete
   markProfileComplete: async () => {
-    try {
-      // First, get the current user's ID
-      const userResponse = await api.get('/auth/me', { _skipAuthRedirect: true });
-      const userId = userResponse.data?.id;
-      
-      if (!userId) {
-        throw new Error('User ID not found');
-      }
-      
-      // Mark the profile as complete
-      const response = await api.patch(`/profiles/${userId}/complete`);
-      return response.data;
-    } catch (error) {
-      console.error('Error marking profile as complete:', {
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
-      });
-      throw error;
-    }
+    const response = await api.put('/profiles/complete');
+    return response.data;
   }
 };
 

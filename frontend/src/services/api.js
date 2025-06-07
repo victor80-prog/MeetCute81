@@ -35,9 +35,23 @@ api.interceptors.response.use(
   (error) => {
     // Handle 401 Unauthorized
     if (error.response?.status === 401) {
-      // Clear token and redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Avoid redirecting if this request was specifically told not to
+      if (!error.config?._skipAuthRedirect) {
+        localStorage.removeItem('token');
+        // Potentially clear other user-related state here
+        window.location.href = '/login';
+      }
+    }
+    // Handle 403 Forbidden - specifically for profile setup requirement
+    else if (error.response?.status === 403 && error.response.data?.code === 'PROFILE_SETUP_REQUIRED') {
+      // Redirect to profile setup if not already there or on other specific public paths
+      const publicPaths = ['/login', '/register', '/verify-email', '/forgot-password', '/reset-password'];
+      if (window.location.pathname !== '/profile-setup' && !publicPaths.includes(window.location.pathname)) {
+        // Check if _skipProfileSetupRedirect is set on the request config
+        if (!error.config?._skipProfileSetupRedirect) {
+          window.location.href = '/profile-setup';
+        }
+      }
     }
     return Promise.reject(error);
   }

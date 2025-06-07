@@ -43,9 +43,10 @@ const ProfileSetup = () => {
     const fetchProfile = async () => {
       if (currentUser) {
         try {
-          const { data } = await profileAPI.getProfile(); // Assumes getProfile is in your API service
-          if (data && data.profile) {
-            const { first_name, last_name, dob, gender, bio, profile_picture } = data.profile;
+          // profileAPI.getProfile() directly returns the profile object or null
+          const existingProfile = await profileAPI.getProfile();
+          if (existingProfile) { // Check if profile exists
+            const { first_name, last_name, dob, gender, bio, profile_picture } = existingProfile;
             setFormData({
               firstName: first_name || '',
               lastName: last_name || '',
@@ -54,8 +55,14 @@ const ProfileSetup = () => {
               bio: bio || '',
             });
             if (profile_picture) {
-              // Assuming VITE_API_URL is 'http://localhost:5000'
-              setProfilePicturePreview(`${import.meta.env.VITE_API_URL}${profile_picture}`);
+              // Construct full URL for profile picture if it's a relative path
+              // Ensure VITE_API_URL is correctly defined in your .env file
+              const baseUrl = import.meta.env.VITE_API_URL || '';
+              if (profile_picture.startsWith('/uploads')) { // Example check for relative path
+                 setProfilePicturePreview(`${baseUrl}${profile_picture}`);
+              } else {
+                 setProfilePicturePreview(profile_picture); // Assume it's a full URL or blob
+              }
             }
           }
         } catch (err) {

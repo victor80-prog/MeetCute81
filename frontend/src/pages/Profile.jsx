@@ -129,8 +129,8 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      // Use the current user's ID from auth context
-      const profileData = await profileAPI.getProfile(currentUser.id);
+      // Fetches the authenticated user's profile (userId is not needed)
+      const profileData = await profileAPI.getProfile();
       setProfile(profileData);
     } catch (err) {
       console.error('Error fetching profile:', err);

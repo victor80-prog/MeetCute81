@@ -152,12 +152,44 @@ exports.login = async (req, res) => {
     );
 
     // Send refresh token as HttpOnly cookie
+    let maxAgeMs;
+    if (typeof jwtRefreshExpiration === 'string') {
+        const unit = jwtRefreshExpiration.slice(-1).toLowerCase();
+        const value = parseInt(jwtRefreshExpiration.slice(0, -1));
+
+        if (isNaN(value)) {
+            logger.error(`Invalid value for JWT_REFRESH_TOKEN_EXPIRATION: ${jwtRefreshExpiration}. Using default 7 days.`);
+            maxAgeMs = 7 * 24 * 60 * 60 * 1000; // Default to 7 days
+        } else {
+            if (unit === 'd') {
+                maxAgeMs = value * 24 * 60 * 60 * 1000;
+            } else if (unit === 'h') {
+                maxAgeMs = value * 60 * 60 * 1000;
+            } else if (unit === 'm') {
+                maxAgeMs = value * 60 * 1000;
+            } else if (unit === 's') {
+                maxAgeMs = value * 1000;
+            } else {
+                logger.warn(`Unsupported unit in JWT_REFRESH_TOKEN_EXPIRATION: '${unit}'. Assuming value is in days. Original value: ${jwtRefreshExpiration}`);
+                // Fallback: if unit is unrecognized but value is a number, assume days.
+                // Or default to a known safe value if this assumption is too broad.
+                maxAgeMs = value * 24 * 60 * 60 * 1000; // Assuming days if unit is unknown
+            }
+        }
+    } else if (typeof jwtRefreshExpiration === 'number') {
+        // If jwtRefreshExpiration is already a number (e.g. from a direct env var that's numeric, representing ms), use it directly
+        maxAgeMs = jwtRefreshExpiration;
+    } else {
+        logger.warn(`JWT_REFRESH_TOKEN_EXPIRATION is not a string or number. Defaulting to 7 days. Value: ${jwtRefreshExpiration}`);
+        maxAgeMs = 7 * 24 * 60 * 60 * 1000; // Default to 7 days
+    }
+
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use 'secure: true' in production (HTTPS)
-      sameSite: 'strict', // Or 'lax'. 'strict' is more secure.
-      maxAge: parseInt(jwtRefreshExpiration) * 24 * 60 * 60 * 1000, // Convert days (e.g., '7d') or hours ('1h') to ms
-      path: '/api/auth' // Important: Path should match the refresh token endpoint's path prefix
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: maxAgeMs, // Use the correctly calculated milliseconds
+      path: '/api/auth'
     });
 
     // Get user data without sensitive information

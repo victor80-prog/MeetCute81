@@ -1,0 +1,22 @@
+/* Basic reset and global styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Smooth transitions for mobile menu */
+#mobile-menu {
+  transition: all 0.3s ease;
+}
+
+/* Active link styling */
+.router-link-active {
+  @apply border-pink-500 text-gray-900;
+}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');

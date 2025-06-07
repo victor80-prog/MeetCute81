@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #ff4d94;
+  --primary-light: #ff7eb3;
+  --primary-dark: #e04484;
+  --secondary: #ffb6c1;
+  --accent: #ffd1dc;
+  --dark: #3a0f3b;
+  --light: #fff9fb;
+  --text: #333333;
+  --text-light: #666666;
+}
+
+body {
+  background-color: var(--light);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] 
+           text-white px-6 py-3 rounded-full font-medium
+           shadow-lg shadow-pink-100 hover:shadow-xl hover:shadow-pink-200
+           transition-all duration-300 hover:-translate-y-0.5;
+  }
+  
+  .card {
+    @apply bg-white rounded-2xl shadow-lg p-6 transition-all 
+           hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  .section-title {
+    @apply text-2xl font-bold text-[var(--dark)] mb-6 flex items-center;
+  }
+}
+/* Add to existing theme.css */
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
+
+.from-\[\#ff7eb3\] {
+  --tw-gradient-from: #ff7eb3;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(255, 126, 179, 0));
+}
+
+.to-\[\#ff4d94\] {
+  --tw-gradient-to: #ff4d94;
+}
+
+.to-\[\#e04484\] {
+  --tw-gradient-to: #e04484;
+}
+
+.bg-opacity-20 {
+  background-color: rgba(255, 255, 255, 0.2);
+}

@@ -1,0 +1,21 @@
+{
+  "name": "MeetCute",
+  "short_name": "MeetCute",
+  "description": "Modern dating platform to find meaningful connections",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff9fb",
+  "theme_color": "#ff4d94",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

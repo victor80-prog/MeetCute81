@@ -1,0 +1,731 @@
+import { useState, useEffect } from 'react';
+import { useAuth } from "../contexts/AuthContext";
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import api from '../utils/api';
+import { FaArrowLeft, FaPaperPlane } from 'react-icons/fa';
+
+const Messages = () => {
+  const [conversations, setConversations] = useState([]);
+  const [activeConversation, setActiveConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [remainingMessages, setRemainingMessages] = useState(null);
+  const [messageLimit, setMessageLimit] = useState(10);
+  const { currentUser } = useAuth();
+  const { userId } = useParams();
+  const navigate = useNavigate();
+  
+  // Fetch conversations on component mount
+  useEffect(() => {
+    fetchConversations();
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fetch remaining message count on component mount and when messages change
+  useEffect(() => {
+    const fetchRemainingMessages = async () => {
+      try {
+        const response = await api.get('/api/usage');
+        if (response.data.success && response.data.data) {
+          const { remainingMessages, dailyMessages } = response.data.data.limits;
+          setRemainingMessages(remainingMessages !== null ? remainingMessages : 999);
+          setMessageLimit(dailyMessages || 10);
+        }
+      } catch (err) {
+        console.error('Error fetching message usage:', err);
+        // Set default values in case of error
+        setRemainingMessages(10);
+        setMessageLimit(10);
+      }
+    };
+
+    fetchRemainingMessages();
+  }, [messages]);
+
+  // Update remaining messages when error changes
+  useEffect(() => {
+    if (error?.limitExceeded && error?.remaining !== undefined) {
+      setRemainingMessages(error.remaining);
+    }
+  }, [error]);
+  
+  // If userId param exists, fetch or create that conversation
+  useEffect(() => {
+    const initializeConversation = async () => {
+      if (userId) {
+        try {
+          // First try to find existing conversation
+          const conversation = conversations.find(c => c.user_id === parseInt(userId));
+          if (conversation) {
+            setActiveConversation(conversation);
+            fetchMessages(conversation.user_id);
+          } else {
+            // If no existing conversation, check if we can use user profile info from Match component
+            const storedUserInfo = sessionStorage.getItem(`match_user_${userId}`);
+            
+            if (storedUserInfo) {
+              // Use stored user info to create a new conversation
+              const userInfo = JSON.parse(storedUserInfo);
+              console.log('Using stored match data:', userInfo);
+              
+              const newConversation = {
+                user_id: parseInt(userId),
+                first_name: userInfo.firstName,
+                last_name: userInfo.lastName,
+                last_message: null,
+                unread_count: 0
+              };
+              
+              console.log('Created new conversation:', newConversation);
+              setActiveConversation(newConversation);
+              setMessages([]); // Clear any existing messages
+              setError(null); // Clear any existing errors
+            } else {
+              // If no stored info, create a default conversation with just the ID
+              console.log('No stored match data, creating minimal conversation');
+              const newConversation = {
+                user_id: parseInt(userId),
+                first_name: 'User',
+                last_name: '#' + userId,
+                last_message: null,
+                unread_count: 0
+              };
+              
+              setActiveConversation(newConversation);
+              setMessages([]); // Clear any existing messages
+              setError(null); // Clear any existing errors
+            }
+          }
+        } catch (err) {
+          console.error('Error initializing conversation:', err);
+          setError('Could not load conversation');
+        }
+      }
+    };
+
+    // Initialize conversation when userId changes
+    initializeConversation();
+  }, [userId, conversations]);
+
+  const fetchConversations = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/api/messages/conversations');
+      console.log('Raw conversations data:', response.data);
+      
+      // Process conversations to ensure they're uniquely identified
+      const processedConversations = response.data.map(conv => {
+        // Make sure conversation has a last_message
+        if (!conv.last_message) {
+          conv.last_message = 'No messages yet';
+        }
+        return conv;
+      });
+      
+      setConversations(processedConversations);
+      
+      // If userId is provided, we'll handle it in the other useEffect
+      // If no userId and we have conversations, select the first one
+      if (!userId && processedConversations.length > 0) {
+        setActiveConversation(processedConversations[0]);
+        fetchMessages(processedConversations[0].user_id);
+      }
+      
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching conversations:', err);
+      setError('Failed to load your conversations');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const fetchMessages = async (recipientId) => {
+    try {
+      const response = await api.get(`/api/messages/conversation?recipientId=${recipientId}`);
+      console.log('Raw message data:', response.data);
+      
+      // Sort messages by created_at to ensure proper chronological order
+      const sortedMessages = response.data.sort((a, b) => {
+        return new Date(a.created_at) - new Date(b.created_at);
+      });
+      
+      // Ensure messages have proper IDs for React keys
+      const messagesWithIds = sortedMessages.map((msg, index) => {
+        // If message has no id, give it a stable unique identifier
+        if (!msg.id) {
+          // Create a stable ID based on content and timestamps if available
+          msg.id = `msg-${index}-${msg.created_at || Date.now()}-${msg.sender_id || 'unknown'}`;
+        }
+        return msg;
+      });
+      
+      console.log('Processed messages (before deduplication):', messagesWithIds);
+
+      // Deduplicate messages based on ID before setting state
+      const uniqueMessages = [];
+      const seenIds = new Set();
+      for (const msg of messagesWithIds) {
+        if (msg.id) { // Check if message has an ID
+          if (!seenIds.has(msg.id)) {
+            uniqueMessages.push(msg);
+            seenIds.add(msg.id);
+          }
+          // Else: duplicate ID found, skip it
+        } else {
+          // If message had no ID (e.g., ID was generated by frontend fallback)
+          // Add it, assuming generated IDs are unique enough for their context
+          uniqueMessages.push(msg);
+        }
+      }
+      console.log('Setting unique messages to state:', uniqueMessages);
+      setMessages(uniqueMessages);
+      
+      // Mark messages as read
+      await api.put('/api/messages/read', { senderId: recipientId });
+      
+      // Update unread count in conversations list
+      setConversations(prevConversations => 
+        prevConversations.map(conv => 
+          conv.user_id === recipientId ? { ...conv, unread_count: 0 } : conv
+        )
+      );
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+      setError('Failed to load messages');
+    }
+  };
+  
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    
+    if (!newMessage.trim() || !activeConversation || isSending) return;
+    
+    setIsSending(true);
+    
+    // Create a temporary message ID for optimistic update
+    const tempId = `temp-${Date.now()}`;
+    const messageContent = newMessage.trim();
+    
+    // Create optimistic message
+    const optimisticMessage = {
+      id: tempId,
+      sender_id: currentUser.id,
+      recipient_id: activeConversation.user_id,
+      content: messageContent,
+      created_at: new Date().toISOString(),
+      isOptimistic: true // Flag to identify optimistic updates
+    };
+    
+    // Optimistically update the UI
+    setMessages(prevMessages => [...prevMessages, optimisticMessage]);
+    
+    // Clear the input immediately
+    setNewMessage('');
+    
+    try {
+      console.log('Sending message to:', activeConversation.user_id);
+      const response = await api.post('/api/messages/send', {
+        recipientId: activeConversation.user_id,
+        content: messageContent
+      });
+      
+      console.log('Send message response:', response.data);
+      
+      // Update the UI with the actual message from the server
+      const sentMessage = response.data;
+      setMessages(prevMessages => {
+        // Remove the optimistic message and add the real one
+        return [
+          ...prevMessages.filter(m => m.id !== tempId && m.id !== sentMessage.id),
+          sentMessage
+        ].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+      });
+      
+      // Update remaining messages count from the response if available
+      if (response.data.remaining !== undefined) {
+        setRemainingMessages(response.data.remaining);
+      }
+      
+      // Update conversation in the list
+      setConversations(prevConversations => {
+        const updatedConversations = [...prevConversations];
+        const conversationIndex = updatedConversations.findIndex(
+          conv => conv.user_id === activeConversation.user_id
+        );
+        
+        if (conversationIndex !== -1) {
+          // Update existing conversation
+          updatedConversations[conversationIndex] = {
+            ...updatedConversations[conversationIndex],
+            last_message: messageContent,
+            updated_at: new Date().toISOString()
+          };
+          // Move to top of the list
+          updatedConversations.unshift(updatedConversations.splice(conversationIndex, 1)[0]);
+        } else {
+          // Add new conversation to the top of the list
+          updatedConversations.unshift({
+            ...activeConversation,
+            last_message: messageContent,
+            updated_at: new Date().toISOString()
+          });
+        }
+        return updatedConversations;
+      });
+      
+      // Clear any existing errors and reset sending state
+      setError(null);
+      setIsSending(false);
+    } catch (err) {
+      console.error('Error sending message:', err);
+      
+      // Revert the optimistic update
+      setMessages(prevMessages => prevMessages.filter(m => m.id !== tempId));
+      
+      // Restore the message to the input if it wasn't sent
+      setNewMessage(messageContent);
+      
+      if (err.response?.status === 429 && err.response?.data?.limitExceeded) {
+        // Specific error for message limit
+        const errorData = err.response.data;
+        const isBasicTier = errorData.tier === 'Basic';
+        const errorMessage = isBasicTier 
+          ? `You've reached your daily message limit of ${errorData.limit || 10}.`
+          : 'An unexpected error occurred with your message limit.';
+        
+        setError({ 
+          type: 'limit_exceeded', 
+          message: errorMessage,
+          remaining: errorData.remaining || 0,
+          limit: errorData.limit || 10,
+          tier: errorData.tier || 'Basic',
+          showUpgrade: isBasicTier
+        });
+        
+        // Update remaining messages when limit is exceeded
+        setRemainingMessages(errorData.remaining || 0);
+      } else {
+        setError({
+          type: 'error',
+          message: err.response?.data?.error || 'Failed to send message. Please try again.',
+          showUpgrade: false
+        });
+      }
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const selectConversation = (conversation) => {
+    setActiveConversation(conversation);
+    fetchMessages(conversation.user_id);
+    navigate(`/messages/${conversation.user_id}`);
+  };
+
+  if (loading && conversations.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary)]"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pt-16">
+      {/* Message limit notification - only show for Basic tier users */}
+      {remainingMessages !== null && currentUser?.subscription_tier && 
+       currentUser.subscription_tier === 'Basic' && (
+        <div className={`border-l-4 p-4 ${
+          remainingMessages === 0 
+            ? 'bg-red-50 border-red-400' 
+            : remainingMessages <= 3 
+              ? 'bg-amber-50 border-amber-400'
+              : 'bg-blue-50 border-blue-400'
+        }`}>
+          <div className="flex items-center justify-between max-w-7xl mx-auto">
+            <div className="flex items-center">
+              <svg 
+                className={`h-5 w-5 mr-2 ${
+                  remainingMessages === 0 
+                    ? 'text-red-500' 
+                    : remainingMessages <= 3 
+                      ? 'text-amber-500' 
+                      : 'text-blue-500'
+                }`} 
+                fill="currentColor" 
+                viewBox="0 0 20 20"
+              >
+                <path 
+                  fillRule="evenodd" 
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" 
+                  clipRule="evenodd" 
+                />
+              </svg>
+              <p className={`text-sm ${
+                remainingMessages === 0 ? 'text-red-700' : 
+                remainingMessages <= 3 ? 'text-amber-700' : 'text-blue-700'
+              }`}>
+                {remainingMessages > 0 ? (
+                  <span>You have <span className="font-bold">{remainingMessages} of {messageLimit}</span> daily messages remaining.</span>
+                ) : (
+                  <span>You've used all your daily messages.</span>
+                )}
+                {remainingMessages <= 3 && (
+                  <span className="ml-2">
+                    <Link 
+                      to="/subscription" 
+                      className={`${
+                        remainingMessages === 0 ? 'text-red-700 hover:text-red-900' : 'text-amber-700 hover:text-amber-900'
+                      } font-medium underline`}
+                    >
+                      Upgrade to Premium
+                    </Link> for unlimited messages.
+                  </span>
+                )}
+              </p>
+            </div>
+            <button 
+              onClick={() => setRemainingMessages(null)} 
+              className="text-amber-500 hover:text-amber-700"
+              aria-label="Dismiss"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {/* Desktop view - split screen */}
+      <div className="hidden md:flex h-[calc(100vh-4rem)] bg-gray-100">
+        {/* Conversations sidebar */}
+        <div className="w-1/3 lg:w-1/4 bg-white border-r border-gray-200 overflow-y-auto">
+          <div className="p-4 border-b">
+            <h1 className="text-xl font-bold">Messages</h1>
+          </div>
+          
+          {conversations.length === 0 ? (
+            <div className="p-4 text-center text-gray-500">
+              No conversations yet
+            </div>
+          ) : (
+            <div>
+              {conversations.map(conversation => (
+                <div 
+                  key={`conv-${conversation.user_id}`}
+                  className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${
+                    activeConversation && activeConversation.user_id === conversation.user_id 
+                      ? 'bg-gray-100' 
+                      : ''
+                  }`}
+                  onClick={() => selectConversation(conversation)}
+                >
+                  <div className="flex items-center">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold mr-3">
+                      {conversation.first_name ? conversation.first_name[0] : '?'}
+                    </div>
+                    
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <h3 className="font-medium">
+                          {conversation.first_name} {conversation.last_name}
+                        </h3>
+                        {conversation.unread_count > 0 && (
+                          <span className="bg-[var(--primary)] text-white text-xs rounded-full px-2 py-1">
+                            {conversation.unread_count}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-gray-600 text-sm truncate">
+                        {conversation.last_message}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* Chat area */}
+        <div className="flex-1 flex flex-col">
+          {activeConversation ? (
+            <>
+              {/* Header */}
+              <div className="p-4 border-b bg-white flex items-center">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold mr-3">
+                  {activeConversation.first_name ? activeConversation.first_name[0] : '?'}
+                </div>
+                
+                <h2 className="font-medium">
+                  {activeConversation.first_name} {activeConversation.last_name}
+                </h2>
+              </div>
+              
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto p-4">
+                {messages.length === 0 ? (
+                  <div className="flex items-center justify-center h-full text-gray-500">
+                    No messages yet. Say hello!
+                  </div>
+                ) : (
+                  messages.map((message) => (
+                    <div 
+                      key={`msg-${message.id}`}
+                      className={`mb-4 flex ${
+                        message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
+                      <div 
+                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                          message.sender_id === currentUser.id 
+                            ? 'bg-[var(--primary)] text-white rounded-br-none' 
+                            : 'bg-gray-200 rounded-bl-none'
+                        }`}
+                      >
+                        <p className="text-sm">{message.content}</p>
+                        <p className="text-xs mt-1 opacity-75 text-right">
+                          {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              
+              {/* Message input */}
+              <div className="p-4 border-t bg-white">
+                <form onSubmit={sendMessage} className="flex items-center mt-4">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    className={`flex-1 border ${
+                      remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic'
+                        ? 'border-gray-300 bg-gray-100 cursor-not-allowed'
+                        : 'border-gray-300 focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent'
+                    } rounded-l-lg px-4 py-2 focus:outline-none`}
+                    disabled={remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic'}
+                  />
+                  <button 
+                    type="submit" 
+                    className={`p-2 rounded-r-lg ${
+                      isSending || !newMessage.trim()
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-[var(--primary)] hover:bg-[var(--primary-dark)]'
+                    } text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]`}
+                    disabled={!newMessage.trim() || isSending || (remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic')}
+                  >
+                    {isSending ? (
+                      <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <FaPaperPlane className="h-5 w-5" />
+                    )}
+                  </button>
+                </form>
+                {remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic' && (
+                  <p className="text-xs text-amber-600 mt-1 text-center">
+                    You've reached your daily message limit. <Link to="/subscription" className="font-medium underline">Upgrade to Premium</Link> for unlimited messages.
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center bg-gray-50">
+              <div className="text-center p-6 max-w-md">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gray-200 mb-4">
+                  <svg className="h-8 w-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-1">No conversation selected</h3>
+                <p className="text-gray-500">Select a conversation or start a new one</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Mobile view - only show active conversation or list */}
+      <div className="md:hidden flex-1 flex flex-col">
+        {activeConversation ? (
+          <>
+            {/* Header */}
+            <div className="p-4 border-b bg-white flex items-center">
+              <button 
+                onClick={() => setActiveConversation(null)}
+                className="mr-2 text-gray-600"
+              >
+                <FaArrowLeft className="h-5 w-5" />
+              </button>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold mr-3">
+                {activeConversation.first_name ? activeConversation.first_name[0] : '?'}
+              </div>
+              <h2 className="font-medium">
+                {activeConversation.first_name} {activeConversation.last_name}
+              </h2>
+            </div>
+            
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+              {messages.length === 0 ? (
+                <div className="flex items-center justify-center h-full text-gray-500">
+                  No messages yet. Say hello!
+                </div>
+              ) : (
+                messages.map((message) => (
+                  <div 
+                    key={`msg-mobile-${message.id}`}
+                    className={`mb-4 flex ${
+                      message.sender_id === currentUser.id ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <div 
+                      className={`max-w-xs px-4 py-2 rounded-lg ${
+                        message.sender_id === currentUser.id 
+                          ? 'bg-[var(--primary)] text-white rounded-br-none' 
+                          : 'bg-white border border-gray-200 rounded-bl-none'
+                      }`}
+                    >
+                      <p className="text-sm">{message.content}</p>
+                      <p className="text-xs mt-1 opacity-75 text-right">
+                        {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+            
+            {/* Message input */}
+            <div className="p-4 border-t bg-white">
+              <form onSubmit={sendMessage} className="flex items-center w-full">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className={`flex-1 border ${
+                    remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic'
+                      ? 'border-gray-300 bg-gray-100 cursor-not-allowed'
+                      : 'border-gray-300 focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent'
+                  } rounded-l-lg px-4 py-2 focus:outline-none`}
+                  disabled={remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic'}
+                />
+                <button
+                  type="submit"
+                  className={`p-2 ${
+                    isSending || !newMessage.trim()
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-[var(--primary)] hover:bg-[var(--primary-dark)]'
+                  } text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)] rounded-r-lg`}
+                  disabled={!newMessage.trim() || isSending || (remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic')}
+                >
+                  {isSending ? (
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <FaPaperPlane className="h-5 w-5" />
+                  )}
+                </button>
+              </form>
+              {remainingMessages === 0 && currentUser?.subscription_tier?.toLowerCase() === 'basic' && (
+                <p className="text-xs text-amber-600 mt-1 text-center">
+                  You've reached your daily message limit. <Link to="/subscription" className="font-medium underline">Upgrade to Premium</Link> for unlimited messages.
+                </p>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-4 border-b">
+              <h1 className="text-xl font-bold">Messages</h1>
+            </div>
+            
+            {conversations.length === 0 ? (
+              <div className="p-4 text-center text-gray-500">
+                No conversations yet
+              </div>
+            ) : (
+              <div>
+                {conversations.map(conversation => (
+                  <div 
+                    key={`conv-mobile-${conversation.user_id}`}
+                    className="p-4 border-b hover:bg-gray-50 cursor-pointer"
+                    onClick={() => selectConversation(conversation)}
+                  >
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white font-bold mr-3">
+                        {conversation.first_name ? conversation.first_name[0] : '?'}
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex justify-between">
+                          <h3 className="font-medium">
+                            {conversation.first_name} {conversation.last_name}
+                          </h3>
+                          {conversation.unread_count > 0 && (
+                            <span className="bg-[var(--primary)] text-white text-xs rounded-full px-2 py-1">
+                              {conversation.unread_count}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-gray-600 text-sm truncate">
+                          {conversation.last_message}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      
+      {/* Error toast */}
+      {error && (
+        <div className={`fixed bottom-4 right-4 p-4 rounded-lg shadow-lg ${
+          error.type === 'limit_exceeded' ? 'bg-green-500' : 'bg-red-500'
+        } text-white max-w-sm`}
+        >
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              {error.type === 'limit_exceeded' ? (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </div>
+            <div className="ml-3">
+              <p className="text-sm">
+                {typeof error === 'string' ? error : error.message}
+              </p>
+            </div>
+            <div className="ml-4 flex-shrink-0 flex">
+              <button
+                className="inline-flex text-white focus:outline-none focus:text-gray-200"
+                onClick={() => setError(null)}
+              >
+                <span className="sr-only">Close</span>
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Messages;

@@ -1,0 +1,37 @@
+{
+  "name": "meetcute-backend",
+  "version": "1.0.0",
+  "description": "Backend for MeetCute dating platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "node scripts/runMigrations.js",
+    "migrate:gifts": "node scripts/migrateGifts.js",
+    "seed:gifts": "node scripts/seedGifts.js",
+    "create:admin": "node scripts/createAdmin.js"
+  },
+  "author": "Kem6oi",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "joi": "^17.12.0",
+    "jsonwebtoken": "^9.0.1",
+    "multer": "^2.0.0",
+    "node-cron": "^4.1.0",
+    "nodemailer": "^7.0.3",
+    "pg": "^8.11.2",
+    "uuid": "^11.1.0",
+    "winston": "^3.11.0",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

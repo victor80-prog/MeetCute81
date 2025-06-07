@@ -1,0 +1,531 @@
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/users"}
+{"level":"info","message":"GET /api/admin/users"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"GET /api/messages/conversations"}
+{"level":"info","message":"GET /api/messages/conversations"}
+{"level":"info","message":"GET /api/messages/1/messages"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"GET /api/matches"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/countries"}
+{"level":"info","message":"GET /api/countries"}
+{"level":"info","message":"SIGTERM received. Shutting down..."}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/profile/53"}
+{"level":"info","message":"GET /api/profile/53"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"GET /auth/me"}
+{"level":"info","message":"GET /auth/me"}
+{"level":"info","message":"POST /auth/login"}
+{"level":"info","message":"POST /auth/login"}
+{"level":"info","message":"POST /auth/login"}
+{"level":"info","message":"POST /auth/login"}
+{"level":"info","message":"POST /api/api/auth/login"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/api/users/53/profile"}
+{"level":"info","message":"GET /api/api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/api/users/53/profile"}
+{"level":"info","message":"GET /api/api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"PUT /api/api/profile"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/api/users/53/profile"}
+{"level":"info","message":"GET /api/api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/api/users/53/profile"}
+{"level":"info","message":"GET /api/api/subscriptions/user"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /health"}
+{"level":"info","message":"GET /health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /auth/me"}
+{"level":"info","message":"GET /auth/me"}
+{"level":"info","message":"POST /auth/login"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance"}
+{"level":"info","message":"GET /api/users/40/profile"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/api/auth/me"}
+{"level":"info","message":"GET /api/api/auth/me"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"code":"ESOCKET","command":"CONN","errno":-104,"level":"error","message":"Error with email configuration: read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","syscall":"read"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"code":"ESOCKET","command":"CONN","errno":-104,"level":"error","message":"Error with email configuration: read ECONNRESET","stack":"Error: read ECONNRESET\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:216:20)","syscall":"read"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/health"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/stats"}
+{"level":"info","message":"GET /api/admin/users"}
+{"level":"info","message":"GET /api/admin/users"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/messages/conversations"}
+{"level":"info","message":"GET /api/messages/conversations"}
+{"level":"info","message":"GET /api/messages/1/messages"}
+{"level":"info","message":"GET /api/gifts/received"}
+{"level":"info","message":"GET /api/gifts/received"}
+{"level":"info","message":"GET /api/subscriptions/packages"}
+{"level":"info","message":"GET /api/subscriptions/packages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"Process terminated."}
+{"level":"info","message":"Process terminated."}
+{"level":"info","message":"Process terminated."}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/profiles"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"GET /api/auth/me"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/profiles/40"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"PUT /api/profiles"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"PUT /api/profiles"}
+{"level":"info","message":"PUT /api/profiles/complete"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"PUT /api/profiles"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/stats"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/dashboard/activity"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"GET /api/transactions/my-transactions?limit=5&offset=0"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"Server running in development mode on port 5000"}
+{"level":"info","message":"Database connected successfully."}
+{"level":"info","message":"Email server is ready to take our messages"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"POST /api/auth/login"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/balance/"}
+{"level":"info","message":"GET /api/profiles/53"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}
+{"level":"info","message":"GET /api/profiles/undefined"}
+{"level":"info","message":"GET /api/subscriptions/user"}

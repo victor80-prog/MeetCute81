@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff4d94">
+    <meta name="description" content="MeetCute - Modern dating platform to find meaningful connections">
+    
+    <!-- Primary Meta Tags -->
+    <title>MeetCute - Find Your Perfect Match</title>
+    <meta name="title" content="MeetCute - Find Your Perfect Match">
+    <meta name="description" content="MeetCute is a modern dating platform where you can find meaningful connections, chat with matches, and build real relationships.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://meetcute.app/">
+    <meta property="og:title" content="MeetCute - Find Your Perfect Match">
+    <meta property="og:description" content="MeetCute is a modern dating platform where you can find meaningful connections, chat with matches, and build real relationships.">
+    <meta property="og:image" content="https://meetcute.app/social-preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://meetcute.app/">
+    <meta property="twitter:title" content="MeetCute - Find Your Perfect Match">
+    <meta property="twitter:description" content="MeetCute is a modern dating platform where you can find meaningful connections, chat with matches, and build real relationships.">
+    <meta property="twitter:image" content="https://meetcute.app/social-preview.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ff4d94">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preload Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // Theme color based on system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        /* Initial loading spinner */
+        #app-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fff9fb 0%, #ffeef5 100%);
+            z-index: 9999;
+            transition: opacity 0.3s ease-out;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 77, 148, 0.2);
+            border-top-color: #ff4d94;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            color: #3a0f3b;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Initial loading screen -->
+    <div id="app-loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading MeetCute...</div>
+    </div>
+    
+    <!-- Root element for React app -->
+    <div id="root"></div>
+    
+    <script>
+        // Hide loading screen when app is mounted
+        window.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('app-loading');
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 300);
+            }, 1000);
+        });
+    </script>
+    
+    <!-- Entry point for the React app -->
+    <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

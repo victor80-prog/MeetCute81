@@ -78,9 +78,9 @@ export const authAPI = {
 
 // Profile API
 export const profileAPI = {
-  // Get user profile
-  getProfile: async (userId) => {
-    const response = await api.get(`/profiles/${userId}`);
+  // Get user profile (fetches the authenticated user's profile)
+  getProfile: async () => {
+    const response = await api.get('/profiles/'); // Removed ${userId}
     return response.data;
   },
   

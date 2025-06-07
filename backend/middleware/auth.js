@@ -39,6 +39,7 @@ const isAuthenticated = async (req, res, next) => {
           u.suspended_at,
           u.message_count_today,
           u.last_message_date,
+          u.profile_complete, -- Added profile_complete
           -- Use COALESCE on our reliable subquery result
           COALESCE(sub.active_tier, 'Basic') as subscription_tier 
       FROM users u
@@ -82,6 +83,34 @@ const isAuthenticated = async (req, res, next) => {
 
       if (!user.is_active) {
         return res.status(403).json({ message: 'Account is not active', error: 'Account not active', status: 'inactive' });
+      }
+
+      // Profile completion check
+      const allowedPaths = [
+        '/api/auth/logout',
+        '/api/auth/me',
+        '/api/auth/refresh-token',
+        // Matches /api/profile and any sub-paths like /api/profile/update
+        /^\/api\/profile(\/.*)?$/
+      ];
+
+      // Check if profile setup is required
+      if (user.profile_complete === false) {
+        const isPathAllowed = allowedPaths.some(path => {
+          if (path instanceof RegExp) {
+            return path.test(req.originalUrl);
+          }
+          return req.originalUrl === path;
+        });
+
+        if (!isPathAllowed) {
+          return res.status(403).json({
+            success: false,
+            error: 'Profile setup required',
+            code: 'PROFILE_SETUP_REQUIRED',
+            requiresProfileSetup: true
+          });
+        }
       }
 
       req.user = user;

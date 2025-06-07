@@ -14,12 +14,14 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (currentUser?.id) {
+      // currentUser is checked to ensure we only fetch if a user is logged in.
+      // profileAPI.getProfile() will fetch the authenticated user's profile.
+      if (currentUser) {
         try {
-          const profileData = await profileAPI.getProfile(currentUser.id);
+          const profileData = await profileAPI.getProfile(); // Corrected call
           setProfile(profileData);
         } catch (err) {
-          console.error('Failed to fetch profile:', err);
+          console.error('Failed to fetch profile for Navbar:', err);
         }
       }
     };

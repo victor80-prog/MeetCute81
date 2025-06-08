@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FaGift, FaTimes, FaSearch, FaUser, FaArrowLeft, FaCheck } from 'react-icons/fa';
-import api from '../../utils/api';
+import { giftsAPI, matchesAPI } from '../../services/api';
 
 const SendGiftModal = ({ isOpen, onClose, onGiftSent }) => {
   const [giftItems, setGiftItems] = useState([]);
@@ -22,8 +22,8 @@ const SendGiftModal = ({ isOpen, onClose, onGiftSent }) => {
 
   const fetchGiftItems = async () => {
     try {
-      const response = await api.get('/api/gifts/items');
-      setGiftItems(response.data || []);
+      const items = await giftsAPI.getAvailableGifts();
+      setGiftItems(Array.isArray(items) ? items : []);
     } catch (err) {
       console.error('Error fetching gift items:', err);
       setError('Failed to load gift items');
@@ -32,8 +32,8 @@ const SendGiftModal = ({ isOpen, onClose, onGiftSent }) => {
 
   const fetchMatches = async () => {
     try {
-      const response = await api.get('/api/matches');
-      setMatches(response.data || []);
+      const userMatches = await matchesAPI.getMatches();
+      setMatches(Array.isArray(userMatches) ? userMatches : []);
     } catch (err) {
       console.error('Error fetching matches:', err);
       setError('Failed to load your matches');
@@ -50,7 +50,7 @@ const SendGiftModal = ({ isOpen, onClose, onGiftSent }) => {
       setIsSending(true);
       setError('');
       
-      await api.post('/api/gifts/send', {
+      await giftsAPI.sendGift({
         recipientId: selectedRecipient.id,
         giftItemId: selectedGift.id,
         message: message || `Sending you a ${selectedGift.name}!`,

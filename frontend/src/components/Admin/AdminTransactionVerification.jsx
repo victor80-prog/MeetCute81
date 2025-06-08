@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 import { FaTasks, FaSpinner, FaExclamationTriangle, FaTimes, FaCheckCircle, FaTimesCircle, FaSearch } from 'react-icons/fa';
 import { format } from 'date-fns';
 
@@ -19,8 +19,9 @@ const AdminTransactionVerification = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/admin/transactions/pending-verification', {
-        params: { limit, offset: (page - 1) * limit },
+      const response = await adminAPI.getPendingTransactions({
+        limit,
+        offset: (page - 1) * limit
       });
       setTransactions(response.data.transactions || []);
       setPagination(prev => ({ ...prev, totalCount: response.data.totalCount || 0, page }));
@@ -50,21 +51,36 @@ const AdminTransactionVerification = () => {
     setVerificationError(null);
   };
 
-  const handleVerificationSubmit = async (newStatus) => {
+  const handleVerifyTransaction = async (isApproved) => {
     if (!selectedTransaction) return;
+    
     setIsSubmittingVerification(true);
     setVerificationError(null);
+    
     try {
-      await api.put(`/api/admin/transactions/${selectedTransaction.id}/verify`, {
-        newStatus,
-        adminNotes,
+      const response = await adminAPI.verifyTransaction(selectedTransaction.id, {
+        is_approved: isApproved,
+        admin_notes: adminNotes
       });
-      handleCloseModal();
-      // Refresh the current page of transactions
-      fetchPendingTransactions(pagination.page, pagination.limit);
+      
+      if (response.data.success) {
+        // Update the transactions list
+        setTransactions(prev => 
+          prev.filter(tx => tx.id !== selectedTransaction.id)
+        );
+        // Update pagination total count
+        setPagination(prev => ({
+          ...prev,
+          totalCount: Math.max(0, prev.totalCount - 1)
+        }));
+        // Close the modal
+        handleCloseModal();
+      }
     } catch (err) {
-      console.error(`Error ${newStatus === 'completed' ? 'approving' : 'declining'} transaction:`, err);
-      setVerificationError(err.response?.data?.message || `Failed to ${newStatus} transaction.`);
+      console.error('Error verifying transaction:', err);
+      setVerificationError(
+        err.response?.data?.message || 'Failed to verify transaction. Please try again.'
+      );
     } finally {
       setIsSubmittingVerification(false);
     }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../../contexts/AuthContext";
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 import {
   LineChart,
   Line,
@@ -28,8 +28,8 @@ const RevenueReport = () => {
   const fetchRevenueData = async () => {
     try {
       const [trendResponse, summaryResponse] = await Promise.all([
-        api.get('/api/admin/revenue'),
-        api.get('/api/admin/revenue/summary')
+        adminAPI.getRevenueStats(),
+        adminAPI.getRevenueSummary()
       ]);
       
       setRevenueData({

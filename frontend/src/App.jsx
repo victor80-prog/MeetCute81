@@ -37,6 +37,7 @@ const router = createBrowserRouter([
   { path: "/verify-email", element: <VerifyEmailPage /> },
   { path: "/suspended", element: <Suspended /> },
   { path: "/", element: <LandingPage /> },
+  { path: "/profile-setup", element: <ProfileSetup /> }, // Moved outside PrivateRoute
 
   // Routes with the main Layout (which now contains SubscriptionProvider)
   {
@@ -54,7 +55,6 @@ const router = createBrowserRouter([
       { path: "/settings", element: <Settings /> },
       { path: "/withdrawals", element: <WithdrawalPage /> },
       { path: "/deposits", element: <DepositPage /> },
-      { path: "/profile-setup", element: <ProfileSetup /> },
       { path: "/subscription/confirmation", element: <SubscriptionConfirmation /> },
       { path: "/subscribe/:packageId", element: <ConfirmSubscriptionPage /> },
     ]

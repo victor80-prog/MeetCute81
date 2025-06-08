@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FaUser, FaCamera } from 'react-icons/fa';
 import Button from '../UI/Button';
 import { useAuth } from "../../contexts/AuthContext";
-import api from '../../utils/api';
+import api from '../../services/api';
 
 // Helper function to get full image URL
 const getImageUrl = (path) => {

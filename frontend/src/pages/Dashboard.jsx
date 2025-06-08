@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FaHeart, FaComments, FaEye, FaArrowUp, FaBell, FaSpinner, FaReceipt, FaCreditCard } from 'react-icons/fa'; // Added FaReceipt, FaCreditCard
 import Card from '../components/UI/Card';
-import api from '../utils/api';
+import { dashboardAPI, transactionsAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow, format } from 'date-fns'; // Added format
 import { useAuth } from "../contexts/AuthContext";
@@ -33,11 +33,11 @@ const Dashboard = () => {
       
       try {
         const [statsResponse, activitiesResponse] = await Promise.all([
-          api.get('/api/dashboard/stats'),
-          api.get('/api/dashboard/activity')
+          dashboardAPI.getStats(),
+          dashboardAPI.getActivity()
         ]);
-        setDashboardStats(statsResponse.data);
-        setActivities(activitiesResponse.data);
+        setDashboardStats(statsResponse);
+        setActivities(activitiesResponse);
       } catch (err) {
         console.error('Error fetching initial dashboard data:', err);
         setError(err.response?.data?.message || 'Failed to load dashboard summary.');
@@ -53,11 +53,12 @@ const Dashboard = () => {
       setTransactionsError(null);
       try {
         const offset = (transactionsPagination.page - 1) * transactionsPagination.limit;
-        const response = await api.get('/api/transactions/my-transactions', {
-          params: { limit: transactionsPagination.limit, offset }
+        const response = await transactionsAPI.getMyTransactions({
+          limit: transactionsPagination.limit,
+          offset
         });
-        setUserTransactions(response.data.transactions || []);
-        setTransactionsPagination(prev => ({ ...prev, totalCount: response.data.totalCount || 0 }));
+        setUserTransactions(response.transactions || []);
+        setTransactionsPagination(prev => ({ ...prev, totalCount: response.totalCount || 0 }));
       } catch (err) {
         console.error('Error fetching user transactions:', err);
         setTransactionsError(err.response?.data?.message || 'Failed to load transactions.');

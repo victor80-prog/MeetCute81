@@ -5,7 +5,7 @@ import { get, post, put, del } from '../utils/apiClient';
  * @returns {Promise<Array>} List of subscription plans
  */
 export const getSubscriptionPlans = async () => {
-  return get('/subscriptions/plans');
+  return get('/api/subscriptions/plans');
 };
 
 /**
@@ -13,7 +13,7 @@ export const getSubscriptionPlans = async () => {
  * @returns {Promise<Object>} Current subscription details
  */
 export const getMySubscription = async () => {
-  return get('/subscriptions/me');
+  return get('/api/subscriptions/me');
 };
 
 /**
@@ -23,7 +23,7 @@ export const getMySubscription = async () => {
  * @returns {Promise<Object>} Subscription confirmation
  */
 export const subscribe = async (planId, paymentMethod) => {
-  return post('/subscriptions/subscribe', { planId, paymentMethod });
+  return post('/api/subscriptions/subscribe', { planId, paymentMethod });
 };
 
 /**
@@ -32,7 +32,7 @@ export const subscribe = async (planId, paymentMethod) => {
  * @returns {Promise<Object>} Updated subscription details
  */
 export const updateSubscription = async (newPlanId) => {
-  return put('/subscriptions/update', { newPlanId });
+  return put('/api/subscriptions/update', { newPlanId });
 };
 
 /**
@@ -41,7 +41,7 @@ export const updateSubscription = async (newPlanId) => {
  * @returns {Promise<Object>} Cancellation confirmation
  */
 export const cancelSubscription = async (reason = '') => {
-  return post('/subscriptions/cancel', { reason });
+  return post('/api/subscriptions/cancel', { reason });
 };
 
 /**
@@ -49,7 +49,7 @@ export const cancelSubscription = async (reason = '') => {
  * @returns {Promise<Object>} Reactivation confirmation
  */
 export const reactivateSubscription = async () => {
-  return post('/subscriptions/reactivate');
+  return post('/api/subscriptions/reactivate');
 };
 
 /**
@@ -59,7 +59,7 @@ export const reactivateSubscription = async () => {
  * @returns {Promise<Object>} Paginated list of invoices
  */
 export const getInvoices = async (page = 1, limit = 10) => {
-  return get('/subscriptions/invoices', { page, limit });
+  return get('/api/subscriptions/invoices', { page, limit });
 };
 
 /**
@@ -68,7 +68,7 @@ export const getInvoices = async (page = 1, limit = 10) => {
  * @returns {Promise<Object>} Invoice details
  */
 export const getInvoiceById = async (invoiceId) => {
-  return get(`/subscriptions/invoices/${invoiceId}`);
+  return get(`/api/subscriptions/invoices/${invoiceId}`);
 };
 
 /**
@@ -77,7 +77,7 @@ export const getInvoiceById = async (invoiceId) => {
  * @returns {Promise<Object>} Updated payment method
  */
 export const updatePaymentMethod = async (paymentMethod) => {
-  return put('/subscriptions/payment-method', { paymentMethod });
+  return put('/api/subscriptions/payment-method', { paymentMethod });
 };
 
 /**
@@ -85,7 +85,7 @@ export const updatePaymentMethod = async (paymentMethod) => {
  * @returns {Promise<Object>} Usage metrics
  */
 export const getUsageMetrics = async () => {
-  return get('/subscriptions/usage');
+  return get('/api/subscriptions/usage');
 };
 
 /**
@@ -94,8 +94,8 @@ export const getUsageMetrics = async () => {
  * @returns {Promise<Array>} List of subscription features
  */
 export const getSubscriptionFeatures = async (planId) => {
-  const params = planId ? { planId } : undefined;
-  return get('/subscriptions/features', params);
+  const params = planId ? { planId } : {};
+  return get('/api/subscriptions/features', params);
 };
 
 /**
@@ -105,7 +105,7 @@ export const getSubscriptionFeatures = async (planId) => {
  */
 export const isFeatureAvailable = async (featureName) => {
   try {
-    const response = await get(`/subscriptions/features/${featureName}/check`);
+    const response = await get(`/api/subscriptions/features/${featureName}/check`);
     return response.data?.available || false;
   } catch (error) {
     console.error(`Error checking feature ${featureName}:`, error);
@@ -118,7 +118,7 @@ export const isFeatureAvailable = async (featureName) => {
  * @returns {Promise<Object>} Subscription status information
  */
 export const getSubscriptionStatus = async () => {
-  return get('/subscriptions/status');
+  return get('/api/subscriptions/status');
 };
 
 /**
@@ -126,7 +126,7 @@ export const getSubscriptionStatus = async () => {
  * @returns {Promise<Array>} Available upgrade options
  */
 export const getUpgradeOptions = async () => {
-  return get('/subscriptions/upgrade-options');
+  return get('/api/subscriptions/upgrade-options');
 };
 
 /**
@@ -135,5 +135,5 @@ export const getUpgradeOptions = async () => {
  * @returns {Promise<Object>} Promo code application result
  */
 export const applyPromoCode = async (promoCode) => {
-  return post('/subscriptions/apply-promo', { promoCode });
+  return post('/api/subscriptions/apply-promo', { promoCode });
 };

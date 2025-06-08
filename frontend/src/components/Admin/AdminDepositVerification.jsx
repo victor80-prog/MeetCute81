@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaSpinner, FaCheck, FaTimes, FaSearch, FaMoneyBillWave } from 'react-icons/fa';
 import { format } from 'date-fns';
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 
 const AdminDepositVerification = () => {
   const [deposits, setDeposits] = useState([]);
@@ -18,12 +18,10 @@ const AdminDepositVerification = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/admin/transactions/pending-verification', {
-        params: { 
-          limit, 
-          offset: (page - 1) * limit,
-          search: query
-        },
+      const response = await adminAPI.getPendingTransactions({
+        limit, 
+        offset: (page - 1) * limit,
+        search: query
       });
       setDeposits(response.data.transactions || []);
       setPagination(prev => ({ 
@@ -67,7 +65,7 @@ const AdminDepositVerification = () => {
     setVerificationError(null);
     
     try {
-      await api.put(`/api/admin/transactions/${selectedDeposit.id}/verify`, {
+      await adminAPI.verifyTransaction(selectedDeposit.id, {
         newStatus: status,
         adminNotes: adminNotes.trim() || undefined
       });

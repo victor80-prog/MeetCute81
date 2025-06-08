@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import api from '../utils/api';
+import { subscriptionAPI } from '../services/api';
 import { useAuth } from './AuthContext';
 
 // Define subscription tiers and their levels for comparison
@@ -34,9 +34,9 @@ export const SubscriptionProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.get('/api/subscriptions/user');
-      if (response.data) {
-        setSubscription(response.data);
+      const response = await subscriptionAPI.getUserSubscription();
+      if (response) {
+        setSubscription(response);
       } else {
         setSubscription(null);
       }

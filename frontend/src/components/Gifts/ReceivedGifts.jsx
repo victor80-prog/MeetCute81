@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGift, FaExchangeAlt, FaRegCheckCircle } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
-import api from '../../utils/api';
+import { giftsAPI } from '../../services/api';
 
 const ReceivedGifts = () => {
   const { currentUser } = useAuth();
@@ -15,8 +15,8 @@ const ReceivedGifts = () => {
   useEffect(() => {
     const fetchReceivedGifts = async () => {
       try {
-        const response = await api.get('/api/gifts/received');
-        setGifts(response.data);
+        const gifts = await giftsAPI.getReceivedGifts();
+        setGifts(Array.isArray(gifts) ? gifts : []);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching received gifts:', err);
@@ -36,7 +36,7 @@ const ReceivedGifts = () => {
       setError('');
       
       // Call the redeem endpoint with the user_gifts.id
-      const response = await api.post(`/api/gifts/received/${giftId}/redeem`);
+      const response = await giftsAPI.redeemGift(giftId);
       
       // Update the local state with the redeemed gift details
       setGifts(gifts.map(gift => 
@@ -44,13 +44,13 @@ const ReceivedGifts = () => {
           ? { 
               ...gift, 
               is_redeemed: true, 
-              redeemed_value: response.data.redeemedAmount,
+              redeemed_value: response.redeemedAmount || response.amount,
               redeemed_at: new Date().toISOString()
             } 
           : gift
       ));
       
-      setSuccess(`Gift redeemed successfully! $${response.data.redeemedAmount} has been added to your balance.`);
+      setSuccess(`Gift redeemed successfully! $${response.redeemedAmount || response.amount} has been added to your balance.`);
       setTimeout(() => setSuccess(''), 5000);
     } catch (err) {
       console.error('Error redeeming gift:', err);

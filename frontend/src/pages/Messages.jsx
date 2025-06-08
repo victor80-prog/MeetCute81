@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaPaperPlane, FaCheckDouble, FaEllipsisV, FaCommentSlash, FaClock } from 'react-icons/fa';
 import { formatDistanceToNow, isValid } from 'date-fns';
-import api from '../utils/api';
+import api from '../services/api';
 import { webSocketService } from '../services/websocketService';
 import chatService from '../services/chatService';
 import { toast } from 'react-toastify';

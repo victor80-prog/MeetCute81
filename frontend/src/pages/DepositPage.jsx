@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaMoneyBillWave, FaHistory, FaExclamationTriangle, FaCheckCircle } from 'react-icons/fa';
-import api from '../utils/api';
+import api from '../services/api';
 import UserBalanceDisplay from '../components/UserBalanceDisplay';
 import { balanceEventEmitter } from '../components/UserBalanceDisplay';
 

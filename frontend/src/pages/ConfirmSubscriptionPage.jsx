@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'; // Added useCal
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSubscription } from "../contexts/SubscriptionContext";
 import { useAuth } from "../contexts/AuthContext";
-import api from '../utils/api';
+import api from '../services/api';
 import UserBalanceDisplay, { balanceEventEmitter } from '../components/UserBalanceDisplay'; // Import balance components
 import { FaWallet } from 'react-icons/fa'; // For Buy with Balance button
 
@@ -125,7 +125,7 @@ const ConfirmSubscriptionPage = () => {
       setIsLoadingCountries(true);
       setCountryError(null);
       try {
-        const response = await api.get('/api/countries'); // Assuming endpoint from previous context
+        const response = await api.get('/api/countries');
         setCountries(response.data || []);
         if (currentUser?.country_id) {
           setSelectedCountryId(currentUser.country_id.toString());
@@ -200,14 +200,12 @@ const ConfirmSubscriptionPage = () => {
   }, [currentSubscription, selectedPackage, actionType]);
 
   const handlePurchaseWithBalance = async () => {
-    if (!selectedPackage) {
-      setError('No package selected.');
-      return;
-    }
-    setIsProcessingBalancePurchase(true);
-    setError(null);
-    setSuccessMessage('');
+    if (!selectedPackage) return;
+    
     try {
+      setIsProcessingBalancePurchase(true);
+      setError('');
+      
       const response = await api.post('/api/subscriptions/purchase-with-balance', { packageId: selectedPackage.id });
       setSuccessMessage(response.data.message || 'Subscription purchased successfully with account balance!');
       await fetchSubscription(); // Refresh subscription state from context
@@ -245,7 +243,7 @@ const ConfirmSubscriptionPage = () => {
                 itemCategory: 'subscription', // Assuming only subscription for now
                 itemId: selectedPackage.id,
             };
-            const response = await api.post('/transactions/initiate', payload);
+            const response = await api.post('/api/transactions/initiate', payload);
             setInitiatedTransaction(response.data); // Store transaction and payment instructions
             // The UI should now update to show payment instructions and reference input
         } catch (err) {

@@ -1,7 +1,7 @@
 // frontend/src/contexts/AuthContext.jsx
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import api from '../utils/api';
+import api from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -41,7 +41,13 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await api.post('/api/auth/login', { email, password });
+      // Make sure we're not sending an Authorization header for the login request
+      const config = {
+        headers: {},
+        _skipAuthRedirect: true
+      };
+      
+      const response = await api.post('/api/auth/login', { email, password }, config);
       const { token, user: userData, requiresVerification } = response.data;
       
       if (requiresVerification) {
@@ -52,13 +58,23 @@ export const AuthProvider = ({ children }) => {
         throw new Error('Invalid response from server');
       }
 
+      // Store token and set default auth header
       localStorage.setItem('token', token);
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      // Set user data
       setCurrentUser(userData);
+      
+      // Verify the token was set correctly
+      console.log('Token set after login, making test request to /api/auth/me');
+      const meResponse = await api.get('/api/auth/me', { _skipAuthRedirect: true });
+      console.log('User data from /api/auth/me:', meResponse.data);
+      
       return { success: true, user: userData };
 
     } catch (err) {
-      const errorMessage = err.response?.data?.error || 'Login failed. Please check your credentials.';
+      console.error('Login error:', err);
+      const errorMessage = err.response?.data?.error || err.message || 'Login failed. Please check your credentials.';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

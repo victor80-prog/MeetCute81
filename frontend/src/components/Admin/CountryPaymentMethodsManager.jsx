@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../../utils/api';
+import api from '../../services/api';
 import { FaPlus, FaEdit, FaTrash, FaSpinner, FaExclamationTriangle, FaTimes } from 'react-icons/fa';
 
 const CountryPaymentMethodsManager = () => {
@@ -174,9 +174,9 @@ const CountryPaymentMethodsManager = () => {
         if (editingConfig.country_id && editingConfig.payment_method_id) { // Indicates editing existing config
             // For PUT, the paymentMethodId in URL is the one we are updating.
             // The payload's paymentMethodId is the global type, which shouldn't change.
-            await api.put(`/api/admin/payment-methods/country/${selectedCountryId}/method/${editingConfig.payment_method_id}`, payload);
+            await adminAPI.updateCountryPaymentMethod(selectedCountryId, editingConfig.payment_method_id, payload);
         } else { // Adding new config
-            await api.post(`/api/admin/payment-methods/country/${selectedCountryId}`, payload);
+            await adminAPI.addCountryPaymentMethod(selectedCountryId, payload);
         }
         await fetchConfiguredMethodsForCountry();
         handleCloseModal();

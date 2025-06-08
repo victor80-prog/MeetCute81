@@ -3,7 +3,7 @@
 
 async function testLogin() {
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('http://localhost:5000/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ function checkToken() {
 }
 
 // Make authenticated request test
-async function testAuthenticatedRequest(endpoint = '/api/auth/me') {
+async function testAuthenticatedRequest(endpoint = '/auth/me') {
   const token = localStorage.getItem('token');
   if (!token) {
     console.error('No token found in localStorage');
@@ -63,7 +63,7 @@ async function testAuthenticatedRequest(endpoint = '/api/auth/me') {
 
 // Helper to test transactions endpoint
 async function testTransactionsRequest() {
-  return testAuthenticatedRequest('/api/transactions/my-transactions?limit=5&offset=0');
+  return testAuthenticatedRequest('/transactions/my-transactions?limit=5&offset=0');
 }
 
 // Export for console use

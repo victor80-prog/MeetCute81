@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../utils/api'; // Assuming api util for authenticated calls
+import { balanceAPI } from '../services/api'; // Import the balance API service
 import { FaWallet } from 'react-icons/fa'; // Example icon
 
 // Simple event emitter for balance updates (can be replaced by context)
@@ -24,35 +24,51 @@ const UserBalanceDisplay = ({ className }) => {
     const fetchBalance = useCallback(async () => {
         setLoading(true);
         try {
-            console.log('Fetching balance from /api/balance/...');
-            const response = await api.get('/api/balance/');
-            console.log('Balance API response:', response.data);
+            console.log('[UserBalanceDisplay] Fetching balance...');
+            const response = await balanceAPI.getBalance();
+            console.log('[UserBalanceDisplay] Balance API response:', response);
             
             // Handle different possible response formats
             let balanceValue = 0;
-            if (response.data && response.data.balance !== undefined) {
-                balanceValue = parseFloat(response.data.balance);
-            } else if (response.data && response.data.amount !== undefined) {
-                balanceValue = parseFloat(response.data.amount);
-            } else if (typeof response.data === 'number') {
-                balanceValue = response.data;
+            const responseData = response || {};
+            
+            // Try different response formats
+            if (typeof responseData === 'number') {
+                balanceValue = responseData;
+            } else if (responseData.balance !== undefined) {
+                balanceValue = parseFloat(responseData.balance);
+            } else if (responseData.data?.balance !== undefined) {
+                balanceValue = parseFloat(responseData.data.balance);
+            } else if (responseData.amount !== undefined) {
+                balanceValue = parseFloat(responseData.amount);
             } else {
-                throw new Error('Invalid response format from server');
+                console.warn('[UserBalanceDisplay] Unexpected balance response format, using 0 as fallback:', responseData);
+                balanceValue = 0;
             }
             
+            console.log(`[UserBalanceDisplay] Parsed balance value: $${balanceValue.toFixed(2)}`);
             setBalance(balanceValue.toFixed(2));
             setError('');
         } catch (err) {
             const errorMessage = err.response?.data?.error || err.message || 'Failed to load balance';
-            setError(errorMessage);
-            console.error('Error fetching balance:', {
+            console.error('[UserBalanceDisplay] Error fetching balance:', {
                 message: err.message,
                 status: err.response?.status,
                 statusText: err.response?.statusText,
-                responseData: err.response?.data,
-                stack: err.stack
+                data: err.response?.data,
+                config: {
+                    url: err.config?.url,
+                    method: err.config?.method,
+                    headers: err.config?.headers
+                }
             });
-            setBalance(null); // Clear balance on error
+            
+            // Only show error if it's not a 401 (unauthorized) which might be handled by auth interceptor
+            if (err.response?.status !== 401) {
+                setError(errorMessage);
+            } else {
+                console.log('[UserBalanceDisplay] Unauthorized - likely needs login, not showing error');
+            }
         } finally {
             setLoading(false);
         }

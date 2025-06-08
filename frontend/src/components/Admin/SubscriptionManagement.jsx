@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 
 const SubscriptionManagement = () => {
   const [packages, setPackages] = useState([]);
@@ -15,7 +15,7 @@ const SubscriptionManagement = () => {
 
   const fetchPackages = async () => {
     try {
-      const response = await api.get('/api/admin/subscription/plans');
+      const response = await adminAPI.getSubscriptionPlans();
       setPackages(response.data);
       setError(null);
     } catch (err) {
@@ -52,9 +52,9 @@ const SubscriptionManagement = () => {
 
     try {
       if (editingPackage) {
-        await api.put(`/api/admin/subscription/plans/${editingPackage.id}`, packageData);
+        await adminAPI.updateSubscriptionPlan(editingPackage.id, packageData);
       } else {
-        await api.post('/api/admin/subscription/plans', packageData);
+        await adminAPI.createSubscriptionPlan(packageData);
       }
       
       setShowModal(false);
@@ -68,7 +68,8 @@ const SubscriptionManagement = () => {
 
   const handleToggleActive = async (pkg) => {
     try {
-      await api.put(`/api/admin/subscription/plans/${pkg.id}`, {
+      await adminAPI.updateSubscriptionPlan(pkg.id, {
+        ...pkg,
         is_active: !pkg.is_active
       });
       setError(null);
@@ -82,7 +83,7 @@ const SubscriptionManagement = () => {
   const handleDelete = async (pkg) => {
     if (window.confirm(`Are you sure you want to delete the ${pkg.name} package? This cannot be undone.`)) {
       try {
-        await api.delete(`/api/admin/subscription/plans/${pkg.id}`);
+        await adminAPI.deleteSubscriptionPlan(pkg.id);
         setError(null);
         fetchPackages();
       } catch (err) {

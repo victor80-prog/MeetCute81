@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCheck, FaTimes, FaCrown, FaArrowRight } from 'react-icons/fa';
-import api from '../utils/api';
+import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -93,7 +93,7 @@ const Pricing = () => {
     }
 
     // Navigate to subscription confirmation page
-    navigate(`/subscribe/${packageId}`);
+    navigate(`api/subscribe/${packageId}`);
   };
 
   if (loading) {

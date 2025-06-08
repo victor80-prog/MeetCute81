@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from "../../contexts/AuthContext";
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 
 const UserManagement = () => {
   const { currentUser } = useAuth();
@@ -19,7 +19,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await api.get('/api/admin/users');
+      const response = await adminAPI.getUsers();
       setUsers(response.data);
       setError(null);
     } catch (err) {
@@ -41,10 +41,7 @@ const UserManagement = () => {
 
   const toggleStatus = async (userId, newStatus, reason = '') => {
     try {
-      await api.put(`/api/admin/users/${userId}/status`, { 
-        status: newStatus,
-        reason
-      });
+      await adminAPI.updateUserStatus(userId, newStatus, reason);
       
       setUsers(users.map(user => 
         user.id === userId ? { ...user, status: newStatus } : user

@@ -142,7 +142,7 @@ const Profile = () => {
 
   const fetchUserSubscription = async () => {
     try {
-      // Assuming 'api' is your preconfigured Axios instance
+      // Using the correct API endpoint with /api/ prefix
       const response = await api.get('/api/subscriptions/user');
       if (response.data) {
         setUserSubscription(response.data);

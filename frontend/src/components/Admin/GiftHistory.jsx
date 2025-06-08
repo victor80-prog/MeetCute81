@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaGift, FaSearch, FaFilter, FaSync } from 'react-icons/fa';
-import api from '../../utils/api';
+import api from '../../services/api';
 
 const GiftHistory = () => {
   const [gifts, setGifts] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../utils/api'; // Assuming api is in src/utils/api.js
+import api from '../../services/api'; // Assuming api is in src/utils/api.js
 import { FaPlusCircle, FaSpinner, FaExclamationTriangle } from 'react-icons/fa';
 
 const GlobalPaymentMethodsManager = () => {
@@ -17,7 +17,7 @@ const GlobalPaymentMethodsManager = () => {
     setIsLoadingTypes(true);
     setErrorTypes(null);
     try {
-      const response = await api.get('/api/admin/payment-methods/types');
+      const response = await adminAPI.getPaymentMethodTypes();
       setGlobalTypes(response.data || []);
     } catch (err) {
       console.error('Error fetching global payment method types:', err);
@@ -42,7 +42,7 @@ const GlobalPaymentMethodsManager = () => {
 
     setIsSubmitting(true);
     try {
-      await api.post('/api/admin/payment-methods/types', {
+      await adminAPI.createPaymentMethodType({
         name: newTypeName,
         code: newTypeCode.toUpperCase(),
         description: newTypeDescription,

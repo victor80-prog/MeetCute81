@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaGift, FaRegCheckCircle, FaRegClock } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
-import api from '../../utils/api';
+import { giftsAPI } from '../../services/api';
 
 const SentGifts = () => {
   const { currentUser } = useAuth();
@@ -12,8 +12,8 @@ const SentGifts = () => {
   useEffect(() => {
     const fetchSentGifts = async () => {
       try {
-        const response = await api.get('/api/gifts/sent');
-        setGifts(response.data);
+        const sentGifts = await giftsAPI.getSentGifts();
+        setGifts(Array.isArray(sentGifts) ? sentGifts : []);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching sent gifts:', err);

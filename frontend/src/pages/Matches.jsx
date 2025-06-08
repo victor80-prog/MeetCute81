@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../contexts/AuthContext";
 import { FaComment, FaHeart, FaUserTimes, FaTimes } from 'react-icons/fa';
-import api from '../utils/api';
+import { matchesAPI, messagesAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -46,8 +46,8 @@ const Matches = () => {
 
   const fetchMatches = async () => {
     try {
-      const response = await api.get('/api/matches');
-      setMatches(response.data);
+      const matchesData = await matchesAPI.getMatches();
+      setMatches(Array.isArray(matchesData) ? matchesData : []);
     } catch (err) {
       console.error('Error fetching matches:', err);
       setError(err.response?.data?.error || 'Failed to fetch matches');
@@ -60,8 +60,8 @@ const Matches = () => {
   const handleChat = async (matchedUserId) => {
     try {
       // Call the API to get or create a conversation
-      const response = await api.get(`/api/messages/conversation/${matchedUserId}`);
-      const { conversationId } = response.data.data;
+      const response = await messagesAPI.getOrCreateConversation(matchedUserId);
+      const conversationId = response?.conversationId || response?.data?.conversationId;
       
       if (conversationId) {
         // Navigate to the messages page with the correct CONVERSATION ID
@@ -79,7 +79,7 @@ const Matches = () => {
     if (!window.confirm('Are you sure you want to unmatch?')) return;
 
     try {
-      await api.delete(`/api/matches/${matchId}`);
+      await matchesAPI.unmatch(matchId);
       setMatches(prevMatches => prevMatches.filter(match => match.id !== matchId));
       toast.success('Successfully unmatched.');
     } catch (err) {

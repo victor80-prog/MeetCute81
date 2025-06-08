@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileCard from '../components/Profile/ProfileCard';
-import api from '../utils/api';
+import { matchesAPI } from '../services/api';
 import { FaHeart, FaTimes } from 'react-icons/fa';
 import { useAuth } from "../contexts/AuthContext";
 
@@ -24,11 +24,11 @@ const Discover = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/matches/suggestions');
-      console.log('Fetched potential matches:', response.data);
+      const response = await matchesAPI.getSuggestions();
+      console.log('Fetched potential matches:', response);
       
       // Process profiles for display
-      const processedProfiles = response.data.map(profile => ({
+      const processedProfiles = (Array.isArray(response) ? response : []).map(profile => ({
         id: profile.user_id,
         user_id: profile.user_id,
         name: `${profile.first_name || ''} ${profile.last_name || ''}`.trim(),
@@ -93,13 +93,13 @@ const Discover = () => {
         setTimeout(() => setError(null), 3000);
       };
       
-      const response = await api.post(`/api/matches/like/${profileId}`);
+      const response = await matchesAPI.likeProfile(profileId);
       
       // Handle already liked profiles
-      if (response.data.alreadyLiked) {
+      if (response.alreadyLiked) {
         console.log('Already liked this profile');
         // Show a more informative message to the user
-        if (response.data.match) {
+        if (response.match) {
           // If it's also a match, show match notification
           showMatchDialog(profileId, true);
         } else {

@@ -36,7 +36,7 @@ const usageRoutes = require('./routes/usageRoutes');
 const app = express();
 const server = http.createServer(app);
 
-// --- CORRECTED CORS CONFIGURATION ---
+// --- CORS Configuration ---
 const allowedOrigins = [
   'http://localhost:5173', 
   'http://127.0.0.1:5173',
@@ -44,23 +44,35 @@ const allowedOrigins = [
   'http://127.0.0.1:3000',
 ];
 
-const corsOptions = {
+// Enable pre-flight across-the-board
+app.options('*', cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
-};
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'x-profile-setup'],
+  exposedHeaders: ['set-cookie']
+}));
 
-// Apply CORS middleware - THIS IS THE ONLY ONE YOU NEED
-app.use(cors(corsOptions));
+// Apply CORS middleware with credentials support
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'x-profile-setup'],
+  exposedHeaders: ['set-cookie']
+}));
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -135,6 +147,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint - must be defined before other routes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -156,22 +177,11 @@ app.use('/api/balance', balanceRoutes);
 app.use('/api/deposits', depositRoutes);
 app.use('/api/usage', usageRoutes);
 app.use('/api/features', featureTestRoutes);
-// We don't need websocket routes if the controller handles everything
 
 // --- WebSocket Setup ---
 // Instantiate the WebSocket controller and pass the server to it.
 const wsController = new WebSocketController(server);
 app.set('wsController', wsController); // Make it accessible in routes if needed
-
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
-});
 
 // 404 handler
 app.use((req, res) => {

@@ -10,22 +10,39 @@ import { profileAPI } from '../../services/api';
 const Navbar = () => {
   const { currentUser, isLoading, logout } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
-      // currentUser is checked to ensure we only fetch if a user is logged in.
-      // profileAPI.getProfile() will fetch the authenticated user's profile.
-      if (currentUser) {
-        try {
-          const profileData = await profileAPI.getProfile(); // Corrected call
-          setProfile(profileData);
-        } catch (err) {
-          console.error('Failed to fetch profile for Navbar:', err);
-        }
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
+      
+      setLoading(true);
+      try {
+        console.log('Fetching profile for user:', currentUser.id);
+        const profileData = await profileAPI.getProfile();
+        console.log('Profile data received:', profileData);
+        setProfile(profileData);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch profile for Navbar:', err);
+        setError('Failed to load profile');
+      } finally {
+        setLoading(false);
       }
     };
+    
     fetchProfile();
+    
+    // Set up a refresh interval to keep the profile data up to date
+    const intervalId = setInterval(fetchProfile, 60000); // Refresh every minute
+    
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
   }, [currentUser]);
 
   const handleLogout = async () => {
@@ -73,7 +90,15 @@ const Navbar = () => {
           </div>
           <div>
             <p className="font-medium text-sm">
-              {isLoading ? 'Loading...' : profile ? `${profile.first_name} ${profile.last_name}`.trim() : currentUser?.email}
+              {loading ? (
+                'Loading...'
+              ) : error ? (
+                <span className="text-red-500">Error loading profile</span>
+              ) : profile ? (
+                `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || currentUser?.email
+              ) : (
+                currentUser?.email || 'User'
+              )}
             </p>
             <UserBalanceDisplay className="text-xs text-gray-500" />
           </div>

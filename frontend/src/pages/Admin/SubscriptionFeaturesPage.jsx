@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../../utils/api'; // Assuming api utility is in this path
+import { adminAPI } from '../../services/api';
 import { FaPlus, FaEdit, FaTrash, FaEye } from 'react-icons/fa'; // Example icons
 
 const SubscriptionFeaturesPage = () => {
@@ -38,7 +38,7 @@ const SubscriptionFeaturesPage = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await api.get('/api/admin/subscription-features');
+      const response = await adminAPI.listSubscriptionFeatures();
       setFeatures(response.data);
     } catch (err) {
       setError('Failed to fetch subscription features. ' + (err.response?.data?.message || err.message));
@@ -64,14 +64,32 @@ const SubscriptionFeaturesPage = () => {
     setLoading(true);
     setError('');
     setSuccessMessage('');
+
+    // Basic validation
+    if (!newFeatureData.feature_name.trim()) {
+      setError('Feature name is required');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await api.post('/api/admin/subscription-features', newFeatureData);
-      setSuccessMessage('Subscription feature created successfully!');
-      fetchFeatures(); // Refresh the list
+      // Add the feature_key based on the feature_name (lowercase, spaces to underscores)
+      const featureToCreate = {
+        ...newFeatureData,
+        feature_key: newFeatureData.feature_name.toLowerCase().replace(/\s+/g, '_')
+      };
+
+      await adminAPI.createSubscriptionFeature(featureToCreate);
+      setSuccessMessage('Feature created successfully!');
+      setNewFeatureData({
+        feature_name: '',
+        feature_description: '',
+        package_id: '',
+      });
       setIsCreateModalOpen(false);
-      setNewFeatureData({ feature_name: '', feature_description: '', package_id: '' }); // Added package_id reset
+      fetchFeatures(); // Refresh the list
     } catch (err) {
-      setError('Failed to create feature. ' + (err.response?.data?.message || err.message));
+      setError('Failed to create feature: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
@@ -101,18 +119,29 @@ const SubscriptionFeaturesPage = () => {
 
   const handleUpdateFeature = async (e) => {
     e.preventDefault();
-    if (!currentFeature || !currentFeature.id) return;
     setLoading(true);
     setError('');
     setSuccessMessage('');
+
+    if (!currentFeature || !editFeatureData.feature_name.trim()) {
+      setError('Feature name is required');
+      setLoading(false);
+      return;
+    }
+
     try {
-      await api.put(`/api/admin/subscription-features/${currentFeature.id}`, editFeatureData);
-      setSuccessMessage('Subscription feature updated successfully!');
-      fetchFeatures(); // Refresh the list
+      // Add the feature_key based on the feature_name (lowercase, spaces to underscores)
+      const featureToUpdate = {
+        ...editFeatureData,
+        feature_key: editFeatureData.feature_name.toLowerCase().replace(/\s+/g, '_')
+      };
+
+      await adminAPI.updateSubscriptionFeature(currentFeature.id, featureToUpdate);
+      setSuccessMessage('Feature updated successfully!');
       setIsEditModalOpen(false);
-      setCurrentFeature(null);
+      fetchFeatures(); // Refresh the list
     } catch (err) {
-      setError('Failed to update feature. ' + (err.response?.data?.message || err.message));
+      setError('Failed to update feature: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
@@ -124,18 +153,19 @@ const SubscriptionFeaturesPage = () => {
   };
 
   const handleDeleteFeature = async () => {
-    if (!currentFeature || !currentFeature.id) return;
+    if (!currentFeature) return;
+
     setLoading(true);
     setError('');
     setSuccessMessage('');
+
     try {
-      await api.delete(`/api/admin/subscription-features/${currentFeature.id}`);
-      setSuccessMessage('Subscription feature deleted successfully!');
-      fetchFeatures(); // Refresh the list
+      await adminAPI.deleteSubscriptionFeature(currentFeature.id);
+      setSuccessMessage('Feature deleted successfully!');
       setIsDeleteModalOpen(false);
-      setCurrentFeature(null);
+      fetchFeatures(); // Refresh the list
     } catch (err) {
-      setError('Failed to delete feature. ' + (err.response?.data?.message || err.message));
+      setError('Failed to delete feature: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }

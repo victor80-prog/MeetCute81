@@ -6,14 +6,19 @@ const pool = require('../config/db');
 
 const isAuthenticated = async (req, res, next) => {
   try {
+    console.log('Auth middleware - Headers:', req.headers);
     let token = req.header('x-auth-token');
     
     if (!token) {
       const authHeader = req.header('Authorization');
+      console.log('Auth middleware - Authorization header:', authHeader);
+      
       if (!authHeader) {
+        console.log('Auth middleware - No token found in request');
         return res.status(401).json({ message: 'No token, authorization denied' });
       }
       token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+      console.log('Auth middleware - Extracted token:', token ? `${token.substring(0, 10)}...` : 'none');
     }
 
     let decoded;
@@ -85,17 +90,20 @@ const isAuthenticated = async (req, res, next) => {
         return res.status(403).json({ message: 'Account is not active', error: 'Account not active', status: 'inactive' });
       }
 
-      // Profile completion check
-      const allowedPaths = [
-        '/api/auth/logout',
-        '/api/auth/me',
-        '/api/auth/refresh-token',
-        // Matches /api/profile and any sub-paths like /api/profile/update
-        /^\/api\/profile(\/.*)?$/
-      ];
+      // Profile completion check - skip if this is a profile setup request
+      const isProfileSetup = req.header('X-Profile-Setup') === 'true';
+      
+      // Skip profile completion check for profile setup requests
+      if (user.profile_complete === false && !isProfileSetup) {
+        const allowedPaths = [
+          '/api/auth/logout',
+          '/api/auth/me',
+          '/api/auth/refresh-token',
+          // Allow all profile-related endpoints during setup
+          /^\/api\/profile/,
+          /^\/profile/
+        ];
 
-      // Check if profile setup is required
-      if (user.profile_complete === false) {
         const isPathAllowed = allowedPaths.some(path => {
           if (path instanceof RegExp) {
             return path.test(req.originalUrl);

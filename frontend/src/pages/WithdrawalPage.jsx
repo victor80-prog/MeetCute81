@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../utils/api';
+import api from '../services/api';
 import UserBalanceDisplay, { balanceEventEmitter } from '../components/UserBalanceDisplay';
 import { FaPaperPlane, FaListAlt, FaClock, FaCheckCircle, FaTimesCircle, FaExclamationTriangle } from 'react-icons/fa';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../utils/api';
+import { adminAPI } from '../../services/api';
 
 const ModerationPanel = () => {
   const [selectedAction, setSelectedAction] = useState('');
@@ -22,8 +22,9 @@ const ModerationPanel = () => {
   const fetchAdminLogs = async () => {
     try {
       setLogsLoading(true);
-      const response = await api.get('/api/admin/logs', {
-        params: { limit: 10, category: 'moderation' }
+      const response = await adminAPI.getLogs({
+        limit: 10,
+        category: 'moderation'
       });
       
       if (response.data && response.data.logs) {
@@ -66,7 +67,7 @@ const ModerationPanel = () => {
 
   const fetchReportedContent = async () => {
     try {
-      const response = await api.get('/api/admin/moderation/reports');
+      const response = await adminAPI.getModerationReports();
       const summary = response.data.summary || {};
       
       setReportedContent([
@@ -86,7 +87,7 @@ const ModerationPanel = () => {
 
   const handleViewReports = async (type) => {
     try {
-      const response = await api.get(`/api/admin/moderation/reports?type=${type}`);
+      const response = await adminAPI.getModerationReports(type);
       setSelectedReport({ type, reports: response.data.reports });
       setReportDetails(null);
     } catch (err) {
@@ -97,7 +98,7 @@ const ModerationPanel = () => {
 
   const handleViewDetails = async (reportId) => {
     try {
-      const response = await api.get(`/api/admin/moderation/reports/${reportId}`);
+      const response = await adminAPI.getReportDetails(reportId);
       setReportDetails(response.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch report details');
@@ -147,7 +148,7 @@ const ModerationPanel = () => {
     try {
       const userIdArray = userIds.split(',').map(id => id.trim()).filter(id => id);
       
-      await api.post('/api/admin/users/bulk-action', {
+      await api.post('/admin/users/bulk-action', {
         action: selectedAction,
         userIds: userIdArray,
         message: warningMessage || undefined

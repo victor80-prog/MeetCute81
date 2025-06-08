@@ -1,6 +1,6 @@
 // frontend/src/services/chatService.js
 
-import api from '../utils/api';
+import api from './api';
 
 const sendMessage = async (conversationId, content, options = {}) => {
   try {

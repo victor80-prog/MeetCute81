@@ -139,9 +139,27 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const profileData = req.body;
+    const { firstName, lastName, dob, gender, bio } = req.body;
     
-    const updatedProfile = await Profile.update(userId, profileData);
+    // Validate required fields
+    if (!firstName || !lastName || !dob || !gender) {
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: firstName, lastName, dob, and gender are required'
+      });
+    }
+    
+    const updatedProfile = await Profile.createOrUpdate({
+      userId,
+      firstName,
+      lastName,
+      dob,
+      gender,
+      bio: bio || ''
+    });
+    
+    // Mark profile as complete
+    await Profile.markProfileComplete(userId);
     
     res.status(200).json({ 
       success: true, 

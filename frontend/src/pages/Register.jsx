@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaHeart, FaPhone, FaGlobe, FaCheckCircle } from 'react-icons/fa';
 
-import api from '../utils/api';
+import api from '../services/api';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const Register = () => {
     try {
       setLoading(true);
       // Call API directly instead of using auth.register
-      const response = await api.post('/api/auth/register', {
+      const response = await api.post('/auth/register', {
         email: formData.email,
         password: formData.password,
         phone: formData.phone,

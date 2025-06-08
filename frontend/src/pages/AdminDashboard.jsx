@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import UserManagement from '../components/Admin/UserManagement';
 import RevenueReport from '../components/Admin/RevenueReport';
+import { adminAPI } from '../services/api';
 import ModerationPanel from '../components/Admin/ModerationPanel';
 import SubscriptionManagement from '../components/Admin/SubscriptionManagement';
 import AdminStats from '../components/Admin/AdminStats';
@@ -12,7 +13,7 @@ import AdminTransactionVerification from '../components/Admin/AdminTransactionVe
 import AdminDepositVerification from '../components/Admin/AdminDepositVerification';
 import AdminWithdrawalsPage from './Admin/AdminWithdrawalsPage';
 import SubscriptionFeaturesPage from './Admin/SubscriptionFeaturesPage';
-import api from '../utils/api';
+import api from '../services/api';
 import { 
   FaUsers, 
   FaChartLine, 
@@ -65,9 +66,10 @@ const AdminDashboard = () => {
       // Ensure token is set in axios headers
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
-      // Make a test request to a public endpoint first
+      // First check if the API is available
       try {
-        const testResponse = await api.get('/api/health', { _skipAuthRedirect: true });
+        console.log('Performing health check...');
+        const testResponse = await api.get('/api/health');
         console.log('Health check response:', testResponse.data);
       } catch (healthErr) {
         console.warn('Health check failed, but continuing with stats fetch:', healthErr.message);
@@ -76,9 +78,7 @@ const AdminDashboard = () => {
       
       // Now try the admin stats endpoint
       console.log('Fetching admin stats...');
-      const response = await api.get('/api/admin/stats', {
-        _skipAuthRedirect: true // Don't redirect on 401
-      });
+      const response = await adminAPI.getDashboardStats();
       
       console.log('Dashboard stats response:', response.data);
       setStats(response.data);

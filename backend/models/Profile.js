@@ -136,6 +136,29 @@ class Profile {
       throw error;
     }
   }
+
+  /**
+   * Marks a user's profile as complete
+   * @param {number} userId - The ID of the user
+   * @returns {Promise<boolean>} True if the update was successful
+   */
+  static async markProfileComplete(userId) {
+    const query = `
+      UPDATE users 
+      SET profile_complete = true, 
+          updated_at = NOW() 
+      WHERE id = $1 
+      RETURNING id, profile_complete;
+    `;
+    
+    try {
+      const result = await pool.query(query, [userId]);
+      return result.rows.length > 0 && result.rows[0].profile_complete === true;
+    } catch (error) {
+      console.error(`Error in Profile.markProfileComplete for user ${userId}:`, error);
+      throw error;
+    }
+  }
 }
 
 module.exports = Profile;
